@@ -1,0 +1,25 @@
+{
+  "name": "graphql-final",
+  "version": "1.0.0",
+  "description": "1. REST的流程：客户端发送action（get/post/put/patch/delete）给后端，后端根据发送的不同endpoint以及action，进行相应处理，然后和数据库交互，拿到数据返回给前端\r 2. GraphQL的流程：客户端发送**Query(get)/Mutation(put/post/patch/delete)**给后端，但是注意：**GraphQL只有一个endpoint: `/graphql`**",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.10.4",
+    "@graphql-tools/merge": "^9.0.4",
+    "bcryptjs": "^2.4.3",
+    "connect-mongodb-session": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "graphql": "^16.8.1",
+    "graphql-passport": "^0.6.8",
+    "mongoose": "^8.4.1",
+    "passport": "^0.7.0"
+  }
+}
