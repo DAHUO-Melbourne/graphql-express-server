@@ -20,14 +20,14 @@ const userTypeDef = `#graphql
     logout: LogoutResponse
   }
 
-  type SignUpInput {
+  input SignUpInput {
     username: String!
     name: String!
     password: String!
     gender: String!
   }
 
-  type LoginInput {
+  input LoginInput {
     username: String!
     password: String!
   }
