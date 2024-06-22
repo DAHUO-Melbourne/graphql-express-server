@@ -38,3 +38,5 @@ const userTypeDef = `#graphql
 
 `
 // !的意思是required，必填
+// Query和Mutation是graphql的保留字段，type都是Query和Mutation里各种借口的参数类型和返回类型而已
+export default userTypeDef;
