@@ -16,6 +16,69 @@
 - 以后client再发任何api，都会在header里带上这个http only cookie
 - server会将这个http only cookie和user store对比，如果对上了就authenticated了
 
+## ApolloClient
+1. 在index.jsx/main.jsx文件里新建一个apolloClient
+```
+const client = new ApolloClient({
+	// TODO => Update the uri on production
+	uri: "http://localhost:4000/graphql",
+	cache: new InMemoryCache(), // Apollo Client uses to cache query results after fetching them.
+	credentials: "include", // This tells Apollo Client to send cookies along with every request to the server.
+});
+```
+2. 将client传递下去:
+```
+<ApolloProvider client={client}>
+  <App />
+</ApolloProvider>
+```
+3. 在整个App里都可以使用这个client来发送api
+4. 创建graphql查询语句:
+```
+export const GET_AUTHENTICATED_USER = gql`
+	query GetAuthenticatedUser {
+		authUser {
+			_id
+			username
+			name
+			profilePicture
+		}
+	}
+`;
+```
+`query`和`authUser`是typeDef里定义的内容，而`GetAuthenticatedUser`是用户自定义的前端函数名
+有参数的如下
+```
+export const GET_USER_AND_TRANSACTIONS = gql`
+	query GetUserAndTransactions($userId: ID!) {
+		user(userId: $userId) {
+			_id
+			name
+			username
+			profilePicture
+			# relationships
+			transactions {
+				_id
+				description
+				paymentType
+				category
+				amount
+				location
+				date
+			}
+		}
+	}
+`;
+```
+`query`和`user(userId: $userId)`需要与后端一致，而`GetUserAndTransactions`是前端自定义的名字，爱叫什么叫什么
+5. 使用useQuery来调用这些query语句:
+```
+import { useQuery } from "@apollo/client";
+
+const { loading, data } = useQuery(GET_AUTHENTICATED_USER);
+
+```
+
 ## 资料：
 https://www.youtube.com/watch?v=Vr-QHtbmd38
 https://github.com/burakorkmez/graphql-crash-course/tree/master
