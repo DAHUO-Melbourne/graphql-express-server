@@ -47,6 +47,16 @@ export const GET_AUTHENTICATED_USER = gql`
 `;
 ```
 `query`和`authUser`是typeDef里定义的内容，而`GetAuthenticatedUser`是用户自定义的前端函数名
+注意这里
+```
+{
+	_id
+	username
+	name
+	profilePicture
+}
+这四个是我们希望返回的字段的列表
+```
 有参数的如下
 ```
 export const GET_USER_AND_TRANSACTIONS = gql`
@@ -97,7 +107,7 @@ export const SIGN_UP = gql`
 	}
 `;
 ```
-注意: `mutation SignUp`的`SignUp`是前端自己定义的，这个SignUp的位置前端爱叫什么叫什么，但是参数部分的`$input: SignUpInput!`需要和后端的`(input: SignUpInput!)`一致，另一个需要一致的是`signUp(input: $input) {`里的`signUp`需要和后端的`signUp(input: SignUpInput!): User!`的`signUp`名称包括大小写一致。
+注意: `SIGN_UP`是前端自己定义的。`mutation SignUp`的`SignUp`也是前端自己定义的，这个SignUp的位置前端爱叫什么叫什么，但是参数部分的`$input: SignUpInput!`需要和后端的`(input: SignUpInput!)`一致，另一个需要一致的是`signUp(input: $input) {`里的`signUp`需要和后端的`signUp(input: SignUpInput!): User!`的`signUp`名称包括大小写一致。
 使用的时候:
 ```
 	const [signup, { loading, error }] = useMutation(SIGN_UP);
@@ -111,7 +121,30 @@ await signup({
 });
 ```
 这个input需要和后端的`signUp(input: SignUpInput!): User!`里的`input`一致，同时这个variables是个保留字段
-
+7. 回调函数:
+```
+	const [logout, { loading, client }] = useMutation(LOGOUT, {
+		refetchQueries: ["GetAuthenticatedUser"],
+	});
+```
+注意`useMutation`的第二个参数, 这是个回调函数，意思是成功执行`logout`以后就会重新执行`GetAuthenticatedUser`函数
+8. 有参数的useQuery
+```
+	const { data: userAndTransactions } = useQuery(GET_USER_AND_TRANSACTIONS, {
+		variables: {
+			userId: authUser?.authUser?._id,
+		},
+	});
+```
+这里面:
+```
+{
+	variables: {
+		userId: authUser?.authUser?._id,
+	},
+}
+```
+variables和userId就是参数，userAndTransactions是将data改名为userAndTransactions，防止同一个文件里的data重名
 ## 资料：
 https://www.youtube.com/watch?v=Vr-QHtbmd38
 https://github.com/burakorkmez/graphql-crash-course/tree/master

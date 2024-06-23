@@ -34,6 +34,7 @@ const HomePage = () => {
 	const { data } = useQuery(GET_TRANSACTION_STATISTICS);
 	const { data: authUserData } = useQuery(GET_AUTHENTICATED_USER);
 
+	// 成功执行logout以后，重新执行GetAuthenticatedUser函数
 	const [logout, { loading, client }] = useMutation(LOGOUT, {
 		refetchQueries: ["GetAuthenticatedUser"],
 	});
