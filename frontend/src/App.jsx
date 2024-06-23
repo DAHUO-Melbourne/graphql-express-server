@@ -5,12 +5,14 @@ import SignUpPage from "./pages/SignUpPage";
 import TransactionPage from "./pages/TransactionPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { useQuery } from "@apollo/client";
-import { GET_AUTHENTICATED_USER } from "./graphql/queries/user.query";
-// import Header from "./components/ui/Header";
+import { GET_AUTHENTICATED_USER, GET_ALL_USERS } from "./graphql/queries/user.query";
+import Header from "./components/ui/Header";
 import { Toaster } from "react-hot-toast";
 
 function App() {
 	const { loading, data, error } = useQuery(GET_AUTHENTICATED_USER);
+	const allUsers = useQuery(GET_ALL_USERS);
+	console.log("all users:", allUsers.data);
 	console.log("authenticated user:", data);
   return (
 		<>

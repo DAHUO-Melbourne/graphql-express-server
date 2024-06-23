@@ -66,8 +66,9 @@ const userResolver = {
 		},
   },
   Query: {
-    users: () => {
-      return users;
+    users: async () => {
+			const users = await User.find();
+			return users;
     },
 		user: async (_, { userId }) => {
 			try {
