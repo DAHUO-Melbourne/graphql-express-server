@@ -78,6 +78,39 @@ import { useQuery } from "@apollo/client";
 const { loading, data } = useQuery(GET_AUTHENTICATED_USER);
 
 ```
+6. 使用useMutation语句:
+先来看看backend的mutation定义语句:
+```
+type Mutation {
+	signUp(input: SignUpInput!): User!
+}
+```
+再来看看frontend的gql定义语句
+```
+export const SIGN_UP = gql`
+	mutation SignUp($input: SignUpInput!) {
+		signUp(input: $input) {
+			_id
+			name
+			username
+		}
+	}
+`;
+```
+注意: `mutation SignUp`的`SignUp`是前端自己定义的，这个SignUp的位置前端爱叫什么叫什么，但是参数部分的`$input: SignUpInput!`需要和后端的`(input: SignUpInput!)`一致，另一个需要一致的是`signUp(input: $input) {`里的`signUp`需要和后端的`signUp(input: SignUpInput!): User!`的`signUp`名称包括大小写一致。
+使用的时候:
+```
+	const [signup, { loading, error }] = useMutation(SIGN_UP);
+```
+`useMutation(SIGN_UP)`会将signup函数返回回来。使用的时候:
+```
+await signup({
+	variables: {
+		input: signUpData,
+	},
+});
+```
+这个input需要和后端的`signUp(input: SignUpInput!): User!`里的`input`一致，同时这个variables是个保留字段
 
 ## 资料：
 https://www.youtube.com/watch?v=Vr-QHtbmd38

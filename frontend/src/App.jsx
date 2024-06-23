@@ -14,6 +14,7 @@ function App() {
 	const allUsers = useQuery(GET_ALL_USERS);
 	console.log("all users:", allUsers.data);
 	console.log("authenticated user:", data);
+	if (loading) return null;
   return (
 		<>
 			{data?.authUser && <Header />}

@@ -14,7 +14,7 @@ const SignUpPage = () => {
 		gender: "",
 	});
 
-	const [signup, { loading }] = useMutation(SIGN_UP, {
+	const [signup, { loading, error }] = useMutation(SIGN_UP, {
 		refetchQueries: ["GetAuthenticatedUser"],
 	});
 
@@ -108,6 +108,9 @@ const SignUpPage = () => {
 								>
 									{loading ? "Loading..." : "Sign Up"}
 								</button>
+								{error && (
+									<p>{error.message}</p>
+								)}
 							</div>
 						</form>
 						<div className='mt-4 text-sm text-gray-600 text-center'>
