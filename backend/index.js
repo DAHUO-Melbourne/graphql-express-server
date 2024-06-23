@@ -6,6 +6,7 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import dotenv from 'dotenv';
+import path from 'path';
 import { connectDB } from "./db/connectDB.js";
 import passport from "passport";
 import session from "express-session";
@@ -15,10 +16,14 @@ import { configurePassport } from "./passport/passport.config.js";
 
 import mergedResolvers from "./resolvers/index.js";
 import mergedTypeDefs from "./typeDefs/index.js";
+import job from "./cron.js";
 
 dotenv.config();
 configurePassport();
 
+job.start();
+
+const __dirname = path.resolve();
 const app = express();
 
 const httpServer = http.createServer(app);
@@ -49,9 +54,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const server = new ApolloServer({
-  typeDefs: mergedTypeDefs,
-  resolvers: mergedResolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+	typeDefs: mergedTypeDefs,
+	resolvers: mergedResolvers,
+	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 })
 
 await server.start();
@@ -66,12 +71,20 @@ app.use(
 	// expressMiddleware accepts the same arguments:
 	// an Apollo Server instance and optional configuration options
 	expressMiddleware(server, {
-    // 这是为了将req和res传递到下面的层级里，也就是resolver里，这样resolver才能拿到header等信息
+		// 这是为了将req和res传递到下面的层级里，也就是resolver里，这样resolver才能拿到header等信息
     // resolver的回调函数有几个参数: parent/params/context, 这个context就是这里传进去的{req, res}
-		context: async ({ req }) => buildContext({req, res}),
+		context: async ({ req, res }) => buildContext({req, res}),
 	})
 );
 
+// npm run build will build your frontend app, and it will the optimized version of your app
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+});
+
+// Modified server startup
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 await connectDB();
 

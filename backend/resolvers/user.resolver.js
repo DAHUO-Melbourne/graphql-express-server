@@ -16,7 +16,7 @@ const userResolver = {
         }
         // hash之后的pwd有10位
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hashedPassword(password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // https://avatar-placeholder.iran.liara.run/
         // 为用户生成头像
