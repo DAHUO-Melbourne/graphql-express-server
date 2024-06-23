@@ -145,6 +145,19 @@ await signup({
 }
 ```
 variables和userId就是参数，userAndTransactions是将data改名为userAndTransactions，防止同一个文件里的data重名
+9. cache机制
+```
+	const [logout, { loading, client }] = useMutation(LOGOUT, {
+		refetchQueries: ["GetAuthenticatedUser"],
+	});
+
+	...
+	await logout();
+	// Clear the Apollo Client cache FROM THE DOCS
+	// https://www.apollographql.com/docs/react/caching/advanced-topics/#:~:text=Resetting%20the%20cache,any%20of%20your%20active%20queries
+	client.resetStore();
+```
+使用	`client.resetStore();`来清理掉原用户所有的数据缓存，来换取一个更良好的用户体验
 ## 资料：
 https://www.youtube.com/watch?v=Vr-QHtbmd38
 https://github.com/burakorkmez/graphql-crash-course/tree/master
